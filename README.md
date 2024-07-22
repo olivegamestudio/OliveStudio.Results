@@ -1,6 +1,6 @@
 # Result (Utility Library)
 
-A utility library with Result and Result<T> type. This type provides a means to return success or failure and a value. Great for avoiding throwing exceptions which are expensive.
+A utility library with Result type. This type provides a means of returning success or failure and an optional value. Great for avoiding throwing exceptions which are expensive.
 
 ## Usage Examples
 
