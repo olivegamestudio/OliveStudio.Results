@@ -1,10 +1,10 @@
 ﻿namespace Utility;
 
 /// <summary>
-/// A result from an task which can be a success or failure.
+/// A result from a task which can be a success or failure.
 /// Where a failure, a reason can be supplied.
 /// </summary>
-public class Result
+public record Result
 {
     public bool Success { get; }
 
@@ -39,7 +39,7 @@ public class Result
     }
 }
 
-public class Result<T> : Result
+public record Result<T> : Result
 {
     public T Value { get; set; }
 
