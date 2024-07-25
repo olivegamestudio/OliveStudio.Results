@@ -1,4 +1,6 @@
-﻿namespace Utility;
+﻿using System.Linq.Expressions;
+
+namespace Utility;
 
 /// <summary>
 /// A result from a task which can be a success or failure.
@@ -11,6 +13,36 @@ public record Result
     public bool IsFailure => !Success;
 
     public string Error { get; private set; }
+
+    public static bool operator true(Result x)
+    {
+        return x.Success;
+    }
+
+    public static bool operator false(Result x)
+    {
+        return x.IsFailure;
+    }
+
+    public static Result operator &(Result lhs, Result rhs)
+    {
+        if (lhs.Success && rhs.Success)
+        {
+            return Result.Ok();
+        }
+
+        if (lhs.IsFailure)
+        {
+            return lhs;
+        }
+
+        if (rhs.IsFailure)
+        {
+            return rhs;
+        }
+
+        return Result.Ok();
+    }
 
     protected Result(bool success, string error)
     {

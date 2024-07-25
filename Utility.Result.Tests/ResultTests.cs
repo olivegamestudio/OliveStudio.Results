@@ -3,6 +3,19 @@ namespace Utility;
 public class ResultTests
 {
     [Test]
+    public void OperatorAnd_Result_Returns_Success()
+    {
+        Result result = Result.Ok() && Result.Ok();
+        Assert.IsTrue(result.Success);
+
+        result = Result.Fail("Failed") && Result.Ok();
+        Assert.IsTrue(result.IsFailure);
+
+        result = Result.Ok() && Result.Fail("Failed");
+        Assert.IsTrue(result.IsFailure);
+    }
+
+    [Test]
     public void Ok_Result_Returns_Success()
     {
         Result result = Result.Ok();
