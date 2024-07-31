@@ -14,6 +14,8 @@ public record Result
 
     public string Error { get; private set; }
 
+    public int ErrorCode { get; private set; }
+
     public static bool operator true(Result x)
     {
         return x.Success;
@@ -44,30 +46,31 @@ public record Result
         return Result.Ok();
     }
 
-    protected Result(bool success, string error)
+    protected Result(bool success, string error, int errorCode)
     {
         Success = success;
         Error = error;
+        ErrorCode = errorCode;
     }
 
-    public static Result Fail(string message)
+    public static Result Fail(string message, int errorCode = 0)
     {
-        return new Result(false, message);
+        return new Result(false, message, errorCode);
     }
 
-    public static Result<T> Fail<T>(string message)
+    public static Result<T> Fail<T>(string message, int errorCode = 0)
     {
-        return new Result<T>(default(T), false, message);
+        return new Result<T>(default(T), false, message, errorCode);
     }
 
     public static Result Ok()
     {
-        return new Result(true, string.Empty);
+        return new Result(true, string.Empty, 0);
     }
 
     public static Result<T> Ok<T>(T value)
     {
-        return new Result<T>(value, true, string.Empty);
+        return new Result<T>(value, true, string.Empty, 0);
     }
 }
 
@@ -75,7 +78,7 @@ public record Result<T> : Result
 {
     public T Value { get; set; }
 
-    protected internal Result(T value, bool success, string error) : base(success, error)
+    protected internal Result(T value, bool success, string error, int errorCode) : base(success, error, errorCode)
     {
         Value = value;
     }

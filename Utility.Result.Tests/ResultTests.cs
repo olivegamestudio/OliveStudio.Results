@@ -23,6 +23,7 @@ public class ResultTests
         Assert.IsTrue(result.Success);
         Assert.IsFalse(result.IsFailure);
         Assert.IsTrue(string.IsNullOrEmpty(result.Error));
+        Assert.That(0, Is.EqualTo(result.ErrorCode));
     }
 
     [Test]
@@ -34,6 +35,7 @@ public class ResultTests
         Assert.IsTrue(result.Success);
         Assert.IsFalse(result.IsFailure);
         Assert.IsTrue(string.IsNullOrEmpty(result.Error));
+        Assert.That(0, Is.EqualTo(result.ErrorCode));
     }
 
     [Test]
@@ -44,5 +46,18 @@ public class ResultTests
         Assert.IsTrue(result.IsFailure);
         Assert.IsFalse(result.Success);
         Assert.IsFalse(string.IsNullOrEmpty(result.Error));
+        Assert.That(0, Is.EqualTo(result.ErrorCode));
     }
+
+    [Test]
+    public void Fail_Result_WithErrorCode_Returns_Failure()
+    {
+        Result result = Result.Fail("The operation failed because of ...", -1);
+
+        Assert.IsTrue(result.IsFailure);
+        Assert.IsFalse(result.Success);
+        Assert.IsFalse(string.IsNullOrEmpty(result.Error));
+        Assert.That(-1, Is.EqualTo(result.ErrorCode));
+    }
+
 }
