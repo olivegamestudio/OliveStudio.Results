@@ -35,7 +35,7 @@ jobs:
         run: dotnet build --configuration Release --no-restore
   
       - name: Test
-        run: dotnet test --no-build --verbosity normal
+        run: dotnet test --configuration Release --logger GitHubActions -p:CollectCoverage=true
 
       - name: Publish Nuget
         run: |
