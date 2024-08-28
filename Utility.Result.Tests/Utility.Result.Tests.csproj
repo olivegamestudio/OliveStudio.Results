@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -11,6 +11,8 @@
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="*" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.*" />
+    <PackageReference Include="Musts" Version="*" />
+    <PackageReference Include="Musts.Result" Version="*" />
     <PackageReference Include="NUnit" Version="3.*" />
     <PackageReference Include="NUnit.Analyzers" Version="3.*" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.*" />

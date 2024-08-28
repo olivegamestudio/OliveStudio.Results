@@ -1,3 +1,5 @@
+using Musts;
+
 namespace Utility;
 
 public class ResultTests
@@ -6,13 +8,13 @@ public class ResultTests
     public void OperatorAnd_Result_Returns_Success()
     {
         Result result = Result.Ok() && Result.Ok();
-        Assert.IsTrue(result.Success);
+        result.MustBeSuccess();
 
         result = Result.Fail("Failed") && Result.Ok();
-        Assert.IsTrue(result.IsFailure);
+        result.MustBeFailure();
 
         result = Result.Ok() && Result.Fail("Failed");
-        Assert.IsTrue(result.IsFailure);
+        result.MustBeFailure();
     }
 
     [Test]
@@ -20,10 +22,9 @@ public class ResultTests
     {
         Result result = Result.Ok();
 
-        Assert.IsTrue(result.Success);
-        Assert.IsFalse(result.IsFailure);
-        Assert.IsTrue(string.IsNullOrEmpty(result.Error));
-        Assert.That(0, Is.EqualTo(result.ErrorCode));
+        result.MustBeSuccess();
+        result.Error.MustBeNullOrEmpty();
+        result.ErrorCode.MustBeZero();
     }
 
     [Test]
@@ -31,11 +32,10 @@ public class ResultTests
     {
         Result<int> result = Result.Ok(99);
 
-        Assert.IsTrue(result.Value == 99);
-        Assert.IsTrue(result.Success);
-        Assert.IsFalse(result.IsFailure);
-        Assert.IsTrue(string.IsNullOrEmpty(result.Error));
-        Assert.That(0, Is.EqualTo(result.ErrorCode));
+        result.Value.MustBeEqual(99);
+        result.MustBeSuccess();
+        result.Error.MustBeNullOrEmpty();
+        result.ErrorCode.MustBeZero();
     }
 
     [Test]
@@ -43,10 +43,8 @@ public class ResultTests
     {
         Result result = Result.Fail("The operation failed because of ...");
 
-        Assert.IsTrue(result.IsFailure);
-        Assert.IsFalse(result.Success);
-        Assert.IsFalse(string.IsNullOrEmpty(result.Error));
-        Assert.That(0, Is.EqualTo(result.ErrorCode));
+        result.MustBeFailure();
+        result.ErrorCode.MustBeZero();
     }
 
     [Test]
@@ -54,10 +52,7 @@ public class ResultTests
     {
         Result result = Result.Fail("The operation failed because of ...", -1);
 
-        Assert.IsTrue(result.IsFailure);
-        Assert.IsFalse(result.Success);
-        Assert.IsFalse(string.IsNullOrEmpty(result.Error));
-        Assert.That(-1, Is.EqualTo(result.ErrorCode));
+        result.MustBeFailure();
+        result.ErrorCode.MustBeEqual(-1);
     }
-
 }
