@@ -88,69 +88,22 @@ public record Result
     }
 
     /// <summary>
-    /// Creates a failure result with the specified error message and error code.
+    /// Initializes a new instance of the <see cref="Result"/> class.
     /// </summary>
-    /// <param name="message">The error message.</param>
-    /// <param name="errorCode">The error code (optional).</param>
-    /// <returns>A failure result.</returns>
-    public static Result Fail(string message, int errorCode = 0)
+    /// <param name="success">A value indicating whether the result is a success.</param>
+    protected Result(bool success)
     {
-        return new Result(false, message, errorCode);
-    }
-
-    /// <summary>
-    /// Creates a failure result with the specified error message and error code.
-    /// </summary>
-    /// <typeparam name="T">The type of the value associated with the result.</typeparam>
-    /// <param name="message">The error message.</param>
-    /// <param name="errorCode">The error code (optional).</param>
-    /// <returns>A failure result.</returns>
-    public static Result<T> Fail<T>(string message, int errorCode = 0)
-    {
-        return new Result<T>(default(T), false, message, errorCode);
+        Success = success;
+        Error = string.Empty;
+        ErrorCode = 0;
     }
 
     /// <summary>
     /// Creates a success result.
     /// </summary>
     /// <returns>A success result.</returns>
-    public static Result Ok()
+    public static OkResult Ok()
     {
-        return new Result(true, string.Empty, 0);
-    }
-
-    /// <summary>
-    /// Creates a success result with the specified value.
-    /// </summary>
-    /// <typeparam name="T">The type of the value associated with the result.</typeparam>
-    /// <param name="value">The value associated with the result.</param>
-    /// <returns>A success result.</returns>
-    public static Result<T> Ok<T>(T value)
-    {
-        return new Result<T>(value, true, string.Empty, 0);
-    }
-}
-
-/// <summary>
-/// A result from a task which can be a success or failure, with an associated value.
-/// </summary>
-/// <typeparam name="T">The type of the value associated with the result.</typeparam>
-public record Result<T> : Result
-{
-    /// <summary>
-    /// Gets or sets the value associated with the result.
-    /// </summary>
-    public T Value { get; set; }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Result{T}"/> class.
-    /// </summary>
-    /// <param name="value">The value associated with the result.</param>
-    /// <param name="success">A value indicating whether the result is a success.</param>
-    /// <param name="error">The error message associated with the result.</param>
-    /// <param name="errorCode">The error code associated with the result.</param>
-    protected internal Result(T value, bool success, string error, int errorCode) : base(success, error, errorCode)
-    {
-        Value = value;
+        return new OkResult();
     }
 }
