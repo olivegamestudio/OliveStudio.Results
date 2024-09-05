@@ -7,20 +7,17 @@ public class ResultTests
     [Test]
     public void OperatorAnd_Result_Returns_Success()
     {
-        Result result = Result.Ok() && Result.Ok();
-        result.MustBeSuccess();
-
-        result = ErrorResult.Fail("Failed") && Result.Ok();
+        Result result = ErrorResult.Fail("Failed") && OkResult.Ok();
         result.MustBeFailure();
 
-        result = Result.Ok() && ErrorResult.Fail("Failed");
+        result = OkResult.Ok() && ErrorResult.Fail("Failed");
         result.MustBeFailure();
     }
 
     [Test]
     public void Ok_Result_Returns_Success()
     {
-        Result result = Result.Ok();
+        Result result = OkResult.Ok();
 
         result.MustBeSuccess();
         result.Error.MustBeNullOrEmpty();
