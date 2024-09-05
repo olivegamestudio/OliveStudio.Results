@@ -74,6 +74,11 @@ public record Result
         return Result.Ok();
     }
 
+    static Result Ok()
+    {
+        return new OkResult();
+    }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="Result"/> class.
     /// </summary>
@@ -98,12 +103,4 @@ public record Result
         ErrorCode = 0;
     }
 
-    /// <summary>
-    /// Creates a success result.
-    /// </summary>
-    /// <returns>A success result.</returns>
-    public static OkResult Ok()
-    {
-        return new OkResult();
-    }
 }

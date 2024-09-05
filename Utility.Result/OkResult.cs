@@ -11,4 +11,13 @@ public record OkResult : Result
     internal OkResult() : base(true)
     {
     }
+
+    /// <summary>
+    /// Creates a success result.
+    /// </summary>
+    /// <returns>A success result.</returns>
+    public static OkResult Ok()
+    {
+        return new OkResult();
+    }
 }
