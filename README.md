@@ -1,3 +1,5 @@
+[![Utility.Result](https://img.shields.io/nuget/v/Utility.Result)](https://www.nuget.org/packages/Utility.Result)
+
 # Result (Utility Library)
 
 A utility library with Result type. This type provides a means of returning success or failure and an optional value. Great for avoiding throwing exceptions which are expensive.
