@@ -1,16 +1,18 @@
+using Xunit;
+
 namespace OliveStudio.Results.Tests;
 
 public class ObjectResultTests
 {
-    [Test]
+    [Fact]
     public void Ok_Result_WithValue_Returns_Success()
     {
         ObjectResult<int> result = OkObjectResult<int>.Ok(99);
 
-        Assert.AreEqual(99, result.Value);
-        Assert.IsTrue(result.Success);
-        Assert.AreEqual(string.Empty, result.Error);
-        Assert.AreEqual(0, result.ErrorCode);
+        Assert.Equal(99, result.Value);
+        Assert.True(result.Success);
+        Assert.Equal(string.Empty, result.Error);
+        Assert.Equal(0, result.ErrorCode);
     }
 
     public Result ReturnOkResult()
