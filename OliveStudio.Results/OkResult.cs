@@ -1,4 +1,4 @@
-﻿namespace Utility;
+﻿namespace OliveStudio.Results;
 
 /// <summary>
 /// Represents a successful result with no associated value.

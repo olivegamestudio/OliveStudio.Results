@@ -1,18 +1,18 @@
-using Musts;
+using Xunit;
 
-namespace Utility;
+namespace OliveStudio.Results.Tests;
 
 public class ObjectResultTests
 {
-    [Test]
+    [Fact]
     public void Ok_Result_WithValue_Returns_Success()
     {
         ObjectResult<int> result = OkObjectResult<int>.Ok(99);
 
-        result.Value.MustBeEqual(99);
-        result.MustBeSuccess();
-        result.Error.MustBeNullOrEmpty();
-        result.ErrorCode.MustBeZero();
+        Assert.Equal(99, result.Value);
+        Assert.True(result.Success);
+        Assert.Equal(string.Empty, result.Error);
+        Assert.Equal(0, result.ErrorCode);
     }
 
     public Result ReturnOkResult()

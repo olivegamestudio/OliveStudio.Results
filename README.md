@@ -1,15 +1,13 @@
-[![Utility.Result](https://img.shields.io/nuget/v/Utility.Result)](https://www.nuget.org/packages/Utility.Result)
+# Results
 
-# Result (Utility Library)
-
-A utility library with Result type. This type provides a means of returning success or failure and an optional value. Great for avoiding throwing exceptions which are expensive.
+A results library with a Result type. This type provides a means of returning success or failure and an optional value. Great for avoiding throwing exceptions which are expensive.
 
 ## Installation
 
-You can use the NUGET package named **Utility.Result** that is on nuget.org or adding this line to an **ItemGroup** in your csproj file.
+You can use the NUGET package named **OliveStudio.Results** that is on nuget.org or adding this line to an **ItemGroup** in your csproj file.
 
 ```
-<PackageReference Include="Utility.Result" Version="*" />
+<PackageReference Include="OliveStudio.Results" Version="*" />
 ```
 
 ## Usage Examples

@@ -1,4 +1,4 @@
-﻿namespace Utility;
+﻿namespace OliveStudio.Results;
 
 public record ObjectResult<T> : Result
 {

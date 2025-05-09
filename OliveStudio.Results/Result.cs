@@ -1,6 +1,4 @@
-﻿using System.Linq.Expressions;
-
-namespace Utility;
+﻿namespace OliveStudio.Results;
 
 /// <summary>
 /// A result from a task which can be a success or failure.

@@ -1,44 +1,44 @@
-using Musts;
+using Xunit;
 
-namespace Utility;
+namespace OliveStudio.Results.Tests;
 
 public class ResultTests
 {
-    [Test]
+    [Fact]
     public void OperatorAnd_Result_Returns_Success()
     {
         Result result = ErrorResult.Fail("Failed") && OkResult.Ok();
-        result.MustBeFailure();
+        Assert.True(result.IsFailure);
 
         result = OkResult.Ok() && ErrorResult.Fail("Failed");
-        result.MustBeFailure();
+        Assert.True(result.IsFailure);
     }
 
-    [Test]
+    [Fact]
     public void Ok_Result_Returns_Success()
     {
         Result result = OkResult.Ok();
 
-        result.MustBeSuccess();
-        result.Error.MustBeNullOrEmpty();
-        result.ErrorCode.MustBeZero();
+        Assert.True(result.Success);
+        Assert.Equal(string.Empty, result.Error);
+        Assert.Equal(0, result.ErrorCode);
     }
 
-    [Test]
+    [Fact]
     public void Fail_Result_Returns_Failure()
     {
         Result result = ErrorResult.Fail("The operation failed because of ...");
 
-        result.MustBeFailure();
-        result.ErrorCode.MustBeEqual(-1);
+        Assert.True(result.IsFailure);
+        Assert.Equal(-1, result.ErrorCode);
     }
 
-    [Test]
+    [Fact]
     public void Fail_Result_WithErrorCode_Returns_Failure()
     {
         Result result = ErrorResult.Fail("The operation failed because of ...", -1);
 
-        result.MustBeFailure();
-        result.ErrorCode.MustBeEqual(-1);
+        Assert.True(result.IsFailure);
+        Assert.Equal(-1, result.ErrorCode);
     }
 }
