@@ -1,4 +1,4 @@
-﻿namespace Utility;
+﻿namespace OliveStudio.Results;
 
 /// <summary>
 /// Represents an error result with an associated error message and error code.

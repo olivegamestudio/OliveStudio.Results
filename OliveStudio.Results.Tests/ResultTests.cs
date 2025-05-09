@@ -1,6 +1,4 @@
-using Musts;
-
-namespace Utility;
+namespace OliveStudio.Results.Tests;
 
 public class ResultTests
 {
@@ -8,10 +6,10 @@ public class ResultTests
     public void OperatorAnd_Result_Returns_Success()
     {
         Result result = ErrorResult.Fail("Failed") && OkResult.Ok();
-        result.MustBeFailure();
+        Assert.IsTrue(result.IsFailure);
 
         result = OkResult.Ok() && ErrorResult.Fail("Failed");
-        result.MustBeFailure();
+        Assert.IsTrue(result.IsFailure);
     }
 
     [Test]
@@ -19,9 +17,9 @@ public class ResultTests
     {
         Result result = OkResult.Ok();
 
-        result.MustBeSuccess();
-        result.Error.MustBeNullOrEmpty();
-        result.ErrorCode.MustBeZero();
+        Assert.IsTrue(result.Success);
+        Assert.AreEqual(string.Empty, result.Error);
+        Assert.AreEqual(0, result.ErrorCode);
     }
 
     [Test]
@@ -29,8 +27,8 @@ public class ResultTests
     {
         Result result = ErrorResult.Fail("The operation failed because of ...");
 
-        result.MustBeFailure();
-        result.ErrorCode.MustBeEqual(-1);
+        Assert.IsTrue(result.IsFailure);
+        Assert.AreEqual(-1, result.ErrorCode);
     }
 
     [Test]
@@ -38,7 +36,7 @@ public class ResultTests
     {
         Result result = ErrorResult.Fail("The operation failed because of ...", -1);
 
-        result.MustBeFailure();
-        result.ErrorCode.MustBeEqual(-1);
+        Assert.IsTrue(result.IsFailure);
+        Assert.AreEqual(-1, result.ErrorCode);
     }
 }

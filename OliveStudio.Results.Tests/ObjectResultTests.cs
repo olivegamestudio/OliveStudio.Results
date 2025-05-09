@@ -1,6 +1,4 @@
-using Musts;
-
-namespace Utility;
+namespace OliveStudio.Results.Tests;
 
 public class ObjectResultTests
 {
@@ -9,10 +7,10 @@ public class ObjectResultTests
     {
         ObjectResult<int> result = OkObjectResult<int>.Ok(99);
 
-        result.Value.MustBeEqual(99);
-        result.MustBeSuccess();
-        result.Error.MustBeNullOrEmpty();
-        result.ErrorCode.MustBeZero();
+        Assert.AreEqual(99, result.Value);
+        Assert.IsTrue(result.Success);
+        Assert.AreEqual(string.Empty, result.Error);
+        Assert.AreEqual(0, result.ErrorCode);
     }
 
     public Result ReturnOkResult()
