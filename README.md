@@ -1,50 +1,242 @@
-# Results
+# OliveStudio.Results
 
-A results library with a Result type. This type provides a means of returning success or failure and an optional value. Great for avoiding throwing exceptions which are expensive.
+A C# library for clean, functional error handling. This library provides a robust alternative to exception-based error handling, making your code more predictable and easier to reason about.
 
 ## Installation
 
-You can use the NUGET package named **OliveStudio.Results** that is on nuget.org or adding this line to an **ItemGroup** in your csproj file.
+```bash
+# Package manager
+Install-Package OliveStudio.Results
 
+# .NET CLI
+dotnet add package OliveStudio.Results
 ```
-<PackageReference Include="OliveStudio.Results" Version="*" />
+
+## Core Types
+
+### Result Types Without Values
+
+#### `OkResult`
+Represents a successful operation with no return value.
+
+```csharp
+var result = OkResult.Ok();
+if (result.Success)
+{
+    Console.WriteLine("Operation completed successfully!");
+}
 ```
 
-## Usage Examples
+#### `ErrorResult`
+Represents a failed operation with error details.
 
-### Returning a successful result from a function.
-
+```csharp
+var result = ErrorResult.Fail("User not found", 404);
+if (result.IsFailure)
+{
+    Console.WriteLine($"Error: {result.Error} (Code: {result.ErrorCode})");
+}
 ```
-    public Result ReturnOkResult()
+
+### Result Types With Values
+
+#### `OkObjectResult<T>`
+Represents a successful operation that returns a value.
+
+```csharp
+var result = OkObjectResult<string>.Ok("Hello, World!");
+if (result.Success)
+{
+    Console.WriteLine(result.Value); // Output: Hello, World!
+}
+```
+
+#### `ErrorObjectResult<T>`
+Represents a failed operation for a specific type.
+
+```csharp
+var result = ErrorObjectResult<User>.Fail("Invalid user data", 400);
+if (result.IsFailure)
+{
+    Console.WriteLine($"Failed to create user: {result.Error}");
+    // result.Value will be default(User)
+}
+```
+
+## Basic Usage Examples
+
+### Simple Validation
+
+```csharp
+public Result ValidateEmail(string email)
+{
+    if (string.IsNullOrWhiteSpace(email))
+        return ErrorResult.Fail("Email is required");
+    
+    if (!email.Contains("@"))
+        return ErrorResult.Fail("Invalid email format");
+    
+    return OkResult.Ok();
+}
+
+// Usage
+var validationResult = ValidateEmail("user@example.com");
+if (validationResult.Success)
+{
+    Console.WriteLine("Email is valid!");
+}
+```
+
+### Operations with Return Values
+
+```csharp
+public ObjectResult<User> CreateUser(string name, string email)
+{
+    if (string.IsNullOrWhiteSpace(name))
+        return ErrorObjectResult<User>.Fail("Name is required");
+    
+    if (string.IsNullOrWhiteSpace(email))
+        return ErrorObjectResult<User>.Fail("Email is required");
+    
+    var user = new User { Name = name, Email = email };
+    return OkObjectResult<User>.Ok(user);
+}
+
+// Usage
+var userResult = CreateUser("John Doe", "john@example.com");
+if (userResult.Success)
+{
+    Console.WriteLine($"Created user: {userResult.Value.Name}");
+}
+else
+{
+    Console.WriteLine($"Failed to create user: {userResult.Error}");
+}
+```
+
+### Combining Results
+
+The library supports combining multiple results using the `&` operator:
+
+```csharp
+public Result ValidateUserData(string name, string email, int age)
+{
+    var nameValidation = ValidateName(name);
+    var emailValidation = ValidateEmail(email);
+    var ageValidation = ValidateAge(age);
+    
+    // All validations must succeed for the combined result to succeed
+    return nameValidation & emailValidation & ageValidation;
+}
+```
+
+### Boolean Conversion
+
+Results can be used directly in conditional statements:
+
+```csharp
+var result = ValidateEmail("test@example.com");
+
+// Direct boolean usage
+if (result)
+{
+    Console.WriteLine("Validation passed");
+}
+```
+
+## Service Layer Example
+
+```csharp
+public class UserService
+{
+    public ObjectResult<User> RegisterUser(string name, string email, string password)
     {
-        return OkResult.Ok();
+        // Validate input
+        var validation = ValidateUserInput(name, email, password);
+        if (validation.IsFailure)
+            return ErrorObjectResult<User>.Fail(validation.Error, validation.ErrorCode);
+        
+        // Check if user exists
+        var existingUser = FindUserByEmail(email);
+        if (existingUser.Success)
+            return ErrorObjectResult<User>.Fail("User already exists", 409);
+        
+        // Create and save user
+        var user = new User { Name = name, Email = email };
+        var saveResult = SaveUser(user);
+        if (saveResult.IsFailure)
+            return ErrorObjectResult<User>.Fail("Failed to save user", 500);
+        
+        return OkObjectResult<User>.Ok(user);
     }
-```
-
-### Returning a successful result and value from a function.
-
-```
-    public ObjectResult<int> ReturnIntegerResult()
+    
+    private Result ValidateUserInput(string name, string email, string password)
     {
-        ObjectResult<int> result = OkObjectResult<int>.Ok(100);
-        return result;
+        var nameValidation = ValidateName(name);
+        var emailValidation = ValidateEmail(email);
+        var passwordValidation = ValidatePassword(password);
+        
+        return nameValidation & emailValidation & passwordValidation;
     }
+}
 ```
 
-### Returns a successful result from a task.
+## API Controller Example
 
-```
-    public Task<Result> ReturnResultForTask()
+```csharp
+[ApiController]
+[Route("api/[controller]")]
+public class UsersController : ControllerBase
+{
+    private readonly UserService _userService;
+    
+    [HttpPost]
+    public IActionResult CreateUser([FromBody] CreateUserRequest request)
     {
-        return Task.FromResult<Result>(OkResult.Ok());
+        var result = _userService.RegisterUser(
+            request.Name, 
+            request.Email, 
+            request.Password);
+        
+        if (result.Success)
+        {
+            return Ok(result.Value);
+        }
+        
+        return result.ErrorCode switch
+        {
+            409 => Conflict(result.Error),
+            500 => StatusCode(500, result.Error),
+            _ => BadRequest(result.Error)
+        };
     }
+}
 ```
 
-### Returns a failure from a function
+## Best Practices
 
+### Use Specific Error Codes
+```csharp
+public static class ErrorCodes
+{
+    public const int ValidationError = 400;
+    public const int NotFound = 404;
+    public const int Conflict = 409;
+    public const int InternalError = 500;
+}
+
+// Usage
+return ErrorResult.Fail("User not found", ErrorCodes.NotFound);
 ```
-    public Result ReturnFailure()
-    {
-        return ErrorResult.Fail("This function has failed because of...");
-    }
+
+### Create Domain-Specific Factory Methods
+```csharp
+public static class UserErrors
+{
+    public static ErrorObjectResult<User> UserNotFound(int userId) =>
+        ErrorObjectResult<User>.Fail($"User with ID {userId} not found", 404);
+    
+    public static ErrorObjectResult<User> EmailAlreadyExists(string email) =>
+        ErrorObjectResult<User>.Fail($"User with email {email} already exists", 409);
+}
 ```
