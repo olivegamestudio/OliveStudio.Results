@@ -19,32 +19,26 @@ public record Result
     /// <summary>
     /// Gets the error message associated with the result.
     /// </summary>
-    public string Error { get; private set; }
+    public string Error { get; init; }
 
     /// <summary>
     /// Gets the error code associated with the result.
     /// </summary>
-    public int ErrorCode { get; private set; }
+    public int ErrorCode { get; init; }
 
     /// <summary>
     /// Defines an implicit conversion to a boolean value.
     /// </summary>
     /// <param name="x">The result to convert.</param>
     /// <returns>True if the result is a success; otherwise, false.</returns>
-    public static bool operator true(Result x)
-    {
-        return x.Success;
-    }
+    public static bool operator true(Result x) => x.Success;
 
     /// <summary>
     /// Defines an implicit conversion to a boolean value.
     /// </summary>
     /// <param name="x">The result to convert.</param>
     /// <returns>True if the result is a failure; otherwise, false.</returns>
-    public static bool operator false(Result x)
-    {
-        return x.IsFailure;
-    }
+    public static bool operator false(Result x) => x.IsFailure;
 
     /// <summary>
     /// Combines two results using a logical AND operation.
@@ -72,10 +66,7 @@ public record Result
         return Result.Ok();
     }
 
-    static Result Ok()
-    {
-        return new OkResult();
-    }
+    static Result Ok() => new OkResult();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Result"/> class.

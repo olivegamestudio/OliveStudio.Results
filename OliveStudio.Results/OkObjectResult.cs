@@ -7,8 +7,11 @@ public record OkObjectResult<T> : ObjectResult<T>
         Value = value;
     }
 
-    public static OkObjectResult<T> Ok(T value)
-    {
-        return new OkObjectResult<T>(value);
-    }
+    /// <summary>
+    /// Creates an <see cref="OkObjectResult{T}"/> object that represents a successful response with the
+    /// specified value.
+    /// </summary>
+    /// <param name="value">The value to include in the response body.</param>
+    /// <returns>An <see cref="OkObjectResult{T}"/> containing the specified value.</returns>
+    public static OkObjectResult<T> Ok(T value) => new(value);
 }

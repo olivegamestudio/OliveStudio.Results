@@ -1,3 +1,4 @@
+using FluentAssertions;
 using Xunit;
 
 namespace OliveStudio.Results.Tests;
@@ -8,10 +9,10 @@ public class ResultTests
     public void OperatorAnd_Result_Returns_Success()
     {
         Result result = ErrorResult.Fail("Failed") && OkResult.Ok();
-        Assert.True(result.IsFailure);
+        result.IsFailure.Should().BeTrue();
 
         result = OkResult.Ok() && ErrorResult.Fail("Failed");
-        Assert.True(result.IsFailure);
+        result.IsFailure.Should().BeTrue();
     }
 
     [Fact]
@@ -19,9 +20,9 @@ public class ResultTests
     {
         Result result = OkResult.Ok();
 
-        Assert.True(result.Success);
-        Assert.Equal(string.Empty, result.Error);
-        Assert.Equal(0, result.ErrorCode);
+        result.Success.Should().BeTrue();
+        result.Error.Should().BeEmpty();
+        result.ErrorCode.Should().Be(0);
     }
 
     [Fact]
@@ -29,8 +30,8 @@ public class ResultTests
     {
         Result result = ErrorResult.Fail("The operation failed because of ...");
 
-        Assert.True(result.IsFailure);
-        Assert.Equal(-1, result.ErrorCode);
+        result.IsFailure.Should().BeTrue();
+        result.ErrorCode.Should().Be(-1);
     }
 
     [Fact]
@@ -38,7 +39,7 @@ public class ResultTests
     {
         Result result = ErrorResult.Fail("The operation failed because of ...", -1);
 
-        Assert.True(result.IsFailure);
-        Assert.Equal(-1, result.ErrorCode);
+        result.IsFailure.Should().BeTrue();
+        result.ErrorCode.Should().Be(-1);
     }
 }

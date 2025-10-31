@@ -20,8 +20,5 @@ public record ErrorResult : Result
     /// <param name="message">The error message.</param>
     /// <param name="errorCode">The error code (optional).</param>
     /// <returns>An error result.</returns>
-    public static ErrorResult Fail(string message, int errorCode = -1)
-    {
-        return new ErrorResult(message, errorCode);
-    }
+    public static ErrorResult Fail(string message, int errorCode = -1) => new(message, errorCode);
 }

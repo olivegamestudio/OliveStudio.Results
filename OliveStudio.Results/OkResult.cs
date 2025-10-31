@@ -16,8 +16,5 @@ public record OkResult : Result
     /// Creates a success result.
     /// </summary>
     /// <returns>A success result.</returns>
-    public static OkResult Ok()
-    {
-        return new OkResult();
-    }
+    public static OkResult Ok() => new();
 }

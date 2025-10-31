@@ -1,24 +1,22 @@
-using Xunit;
+using FluentAssertions;
+using FsCheck.Xunit;
 
 namespace OliveStudio.Results.Tests;
 
 public class ObjectResultTests
 {
-    [Fact]
-    public void Ok_Result_WithValue_Returns_Success()
+    [Property]
+    public void Ok_Result_WithValue_Returns_Success(int resultValue)
     {
-        ObjectResult<int> result = OkObjectResult<int>.Ok(99);
+        ObjectResult<int> result = OkObjectResult<int>.Ok(resultValue);
 
-        Assert.Equal(99, result.Value);
-        Assert.True(result.Success);
-        Assert.Equal(string.Empty, result.Error);
-        Assert.Equal(0, result.ErrorCode);
+        result.Value.Should().Be(resultValue);
+        result.Success.Should().BeTrue();
+        result.Error.Should().BeEmpty();
+        result.ErrorCode.Should().Be(0);
     }
 
-    public Result ReturnOkResult()
-    {
-        return OkResult.Ok();
-    }
+    public Result ReturnOkResult() => OkResult.Ok();
 
     public ObjectResult<int> ReturnIntegerResult()
     {
@@ -26,10 +24,7 @@ public class ObjectResultTests
         return result;
     }
 
-    public Task<Result> ReturnResultForTask()
-    {
-        return Task.FromResult<Result>(OkResult.Ok());
-    }
+    public Task<Result> ReturnResultForTask() => Task.FromResult<Result>(OkResult.Ok());
 
     public Result ReturnFailure()
     {
