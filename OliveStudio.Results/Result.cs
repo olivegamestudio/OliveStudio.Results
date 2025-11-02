@@ -17,12 +17,12 @@ public record Result
     public bool IsFailure => !Success;
 
     /// <summary>
-    /// Gets the error message associated with the result.
+    /// Gets the errorMessage message associated with the result.
     /// </summary>
-    public string Error { get; init; }
+    public string ErrorMessage { get; init; }
 
     /// <summary>
-    /// Gets the error code associated with the result.
+    /// Gets the errorMessage code associated with the result.
     /// </summary>
     public int ErrorCode { get; init; }
 
@@ -72,12 +72,12 @@ public record Result
     /// Initializes a new instance of the <see cref="Result"/> class.
     /// </summary>
     /// <param name="success">A value indicating whether the result is a success.</param>
-    /// <param name="error">The error message associated with the result.</param>
-    /// <param name="errorCode">The error code associated with the result.</param>
-    protected Result(bool success, string error, int errorCode)
+    /// <param name="errorMessage">The errorMessage message associated with the result.</param>
+    /// <param name="errorCode">The errorMessage code associated with the result.</param>
+    protected Result(bool success, string errorMessage, int errorCode)
     {
         Success = success;
-        Error = error;
+        ErrorMessage = errorMessage;
         ErrorCode = errorCode;
     }
 
@@ -88,7 +88,7 @@ public record Result
     protected Result(bool success)
     {
         Success = success;
-        Error = string.Empty;
+        ErrorMessage = string.Empty;
         ErrorCode = 0;
     }
 

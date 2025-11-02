@@ -12,7 +12,7 @@ public class ObjectResultTests
 
         result.Value.Should().Be(resultValue);
         result.Success.Should().BeTrue();
-        result.Error.Should().BeEmpty();
+        result.ErrorMessage.Should().BeEmpty();
         result.ErrorCode.Should().Be(0);
     }
 
@@ -28,6 +28,6 @@ public class ObjectResultTests
 
     public Result ReturnFailure()
     {
-        return ErrorResult.Fail("This function has failed because of...");
+        return FailedResult.Fail("This function has failed because of...");
     }
 }

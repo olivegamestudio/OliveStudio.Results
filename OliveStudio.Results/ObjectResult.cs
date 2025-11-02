@@ -7,7 +7,7 @@ public record ObjectResult<T> : Result
     /// </summary>
     public T Value { get; init; }
 
-    protected internal ObjectResult(T value, bool success, string error, int errorCode) : base(success, error, errorCode)
+    protected internal ObjectResult(T value, bool success, string errorMessage, int errorCode) : base(success, errorMessage, errorCode)
     {
         Value = value;
     }
