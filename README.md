@@ -31,7 +31,7 @@ if (result.Success)
 Represents a failed operation with error details.
 
 ```csharp
-var result = ErrorResult.Fail("User not found", 404);
+var result = FailedResult.Fail("User not found", 404);
 if (result.IsFailure)
 {
     Console.WriteLine($"Error: {result.Error} (Code: {result.ErrorCode})");
@@ -51,11 +51,11 @@ if (result.Success)
 }
 ```
 
-#### `ErrorObjectResult<T>`
+#### `FailedObjectResult<T>`
 Represents a failed operation for a specific type.
 
 ```csharp
-var result = ErrorObjectResult<User>.Fail("Invalid user data", 400);
+var result = FailedObjectResult<User>.Fail("Invalid user data", 400);
 if (result.IsFailure)
 {
     Console.WriteLine($"Failed to create user: {result.Error}");
@@ -71,10 +71,10 @@ if (result.IsFailure)
 public Result ValidateEmail(string email)
 {
     if (string.IsNullOrWhiteSpace(email))
-        return ErrorResult.Fail("Email is required");
+        return FailedResult.Fail("Email is required");
     
     if (!email.Contains("@"))
-        return ErrorResult.Fail("Invalid email format");
+        return FailedResult.Fail("Invalid email format");
     
     return OkResult.Ok();
 }
@@ -93,10 +93,10 @@ if (validationResult.Success)
 public ObjectResult<User> CreateUser(string name, string email)
 {
     if (string.IsNullOrWhiteSpace(name))
-        return ErrorObjectResult<User>.Fail("Name is required");
+        return FailedObjectResult<User>.Fail("Name is required");
     
     if (string.IsNullOrWhiteSpace(email))
-        return ErrorObjectResult<User>.Fail("Email is required");
+        return FailedObjectResult<User>.Fail("Email is required");
     
     var user = new User { Name = name, Email = email };
     return OkObjectResult<User>.Ok(user);
@@ -154,18 +154,18 @@ public class UserService
         // Validate input
         var validation = ValidateUserInput(name, email, password);
         if (validation.IsFailure)
-            return ErrorObjectResult<User>.Fail(validation.Error, validation.ErrorCode);
+            return FailedObjectResult<User>.Fail(validation.Error, validation.ErrorCode);
         
         // Check if user exists
         var existingUser = FindUserByEmail(email);
         if (existingUser.Success)
-            return ErrorObjectResult<User>.Fail("User already exists", 409);
+            return FailedObjectResult<User>.Fail("User already exists", 409);
         
         // Create and save user
         var user = new User { Name = name, Email = email };
         var saveResult = SaveUser(user);
         if (saveResult.IsFailure)
-            return ErrorObjectResult<User>.Fail("Failed to save user", 500);
+            return FailedObjectResult<User>.Fail("Failed to save user", 500);
         
         return OkObjectResult<User>.Ok(user);
     }
@@ -226,17 +226,17 @@ public static class ErrorCodes
 }
 
 // Usage
-return ErrorResult.Fail("User not found", ErrorCodes.NotFound);
+return FailedResult.Fail("User not found", ErrorCodes.NotFound);
 ```
 
 ### Create Domain-Specific Factory Methods
 ```csharp
 public static class UserErrors
 {
-    public static ErrorObjectResult<User> UserNotFound(int userId) =>
-        ErrorObjectResult<User>.Fail($"User with ID {userId} not found", 404);
+    public static FailedObjectResult<User> UserNotFound(int userId) =>
+        FailedObjectResult<User>.Fail($"User with ID {userId} not found", 404);
     
-    public static ErrorObjectResult<User> EmailAlreadyExists(string email) =>
-        ErrorObjectResult<User>.Fail($"User with email {email} already exists", 409);
+    public static FailedObjectResult<User> EmailAlreadyExists(string email) =>
+        FailedObjectResult<User>.Fail($"User with email {email} already exists", 409);
 }
 ```
